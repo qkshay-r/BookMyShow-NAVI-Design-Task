@@ -25,6 +25,14 @@ The small code icon beside the phone's bottom navigation bar opens **Demo contro
 
 ## Build and deploy
 
+### GitHub Pages
+
+The GitHub Pages workflow in `.github/workflows/deploy-pages.yml` builds the app from `main` and publishes `dist/` after each push. In the repository's **Settings → Pages → Build and deployment**, choose **GitHub Actions** as the source. Then commit and push the workflow and `vite.config.ts` to `main`.
+
+The project URL is `https://qkshay-r.github.io/BookMyShow-NAVI-Design-Task/`. The repository path is configured as Vite's `base`, so assets load under that URL. Open **Actions** to follow the first deployment. The Pages settings will show **Visit site** when it finishes. The booking state lives in each visitor's own browser storage.
+
+### Local build
+
 ```sh
 npm run build
 npm run preview
