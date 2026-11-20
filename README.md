@@ -69,6 +69,7 @@ src/
     UI.tsx                 Header, status bar, demo controls, dialogs and buttons
     SeatGrid.tsx           Shared auditorium layout and seat states
     BookingDetails.tsx     Show details and expandable price breakdown
+    VehicleIllustration.tsx Seat-count artwork for bicycles, scooters and group vehicles
     Tickets.tsx            Confirmed ticket, reservation card and countdown
   screens/
     Quantity.tsx           Quantity sheet and reservation accordion
@@ -92,8 +93,8 @@ The persisted key is `bms.group-booking.v1`. Monetary values use integer paise. 
 
 ## Visual decisions and remaining polish
 
-The interaction uses the Android-style layout, local Roboto, a reconstructed car illustration and a dummy QR pattern. The sheet initially selects four tickets, with optional extras collapsed. Before payment, the sheet says “to book now” and “to reserve.” The ticket uses the Scene poster and an M-Ticket ribbon. The status bar, bank offer strip and poster serve as visual context for the booking flow.
+The interaction uses the Android-style layout, local Roboto, vehicle illustrations for all ten seat counts and a dummy QR pattern. The sheet initially selects four tickets, with optional extras collapsed. Before payment, the sheet says “to book now” and “to reserve.” The ticket uses the Scene poster and an M-Ticket ribbon. The status bar, bank offer strip and poster serve as visual context for the booking flow.
 
-The car, status icons and smallest spacing details are approximations. The next design pass can replace those assets and refine device-specific safe-area spacing. The expiry and payment-failure messages are intentionally simple until the next reference screens arrive.
+The vehicle artwork, status icons and smallest spacing details are approximations. The next design pass can replace those assets and refine device-specific safe-area spacing. The expiry and payment-failure messages are intentionally simple until the next reference screens arrive.
 
 The bundled poster comes from the [Scene listing on BookMyShow](https://in.bookmyshow.com/movies/NCR/scene/ET00516631). The bundled font licence is in `public/Roboto-LICENSE.txt`.
