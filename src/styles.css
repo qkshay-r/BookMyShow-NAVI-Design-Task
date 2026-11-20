@@ -35,7 +35,7 @@ button svg { flex-shrink:0 }
 .statusbar { position:relative; z-index:3; display:flex; align-items:center; justify-content:space-between; padding:0 19px; height:35px; flex-shrink:0; background:transparent; color:#55585d; font-size:13px; line-height:1 }
 .statusbar b { font-size:14px; font-weight:600; letter-spacing:.2px }
 .status-icons { display:flex; align-items:center; gap:5px }
-.demo-icon,.icon,.info-icon,.expand,.close-ticket { display:inline-flex; align-items:center; justify-content:center }
+.demo-icon,.icon,.info-icon,.close-ticket { display:inline-flex; align-items:center; justify-content:center }
 .demo-icon { position:absolute; z-index:4; bottom:0; left:9px; width:30px; height:28px; opacity:.55; color:#55585d }
 .demo-icon:hover { opacity:1 }
 .header { flex-shrink:0; min-height:49px; display:flex; align-items:center; gap:9px; padding:5px 13px 8px 9px }
@@ -97,26 +97,20 @@ dialog::backdrop { background:#17192270 }
 .quantities button,.segments button { transition:background-color 180ms ease, color 180ms ease, transform 180ms ease }
 .quantities button:active,.segments button:active { transform:scale(.92) }
 .sheet-rule { margin:15px 0; border-top:1px solid var(--line) }
-.reserve-accordion { background:var(--blush); border-radius:9px; text-align:left; padding:10px 11px; cursor:pointer; transition:background-color 200ms ease, box-shadow 200ms ease }
-.reserve-accordion:hover { background:#fbe9ef }
-.reserve-accordion[data-disabled="true"] { background:#f1f2f4; color:var(--muted); cursor:default }
-.reserve-accordion[data-disabled="true"] .icon-tile,
-.reserve-accordion[data-disabled="true"] .quantity-summary { background:#e6e8eb; color:inherit }
-.reserve-accordion[data-disabled="true"] .quantity-summary svg { color:inherit }
-.reserve-accordion:has(.accordion-panel[data-open="true"]) { box-shadow:0 2px 10px #ee34550c }
-.accordion-panel { display:grid; grid-template-rows:0fr; opacity:0; transition:grid-template-rows 240ms ease, opacity 180ms ease }
-.accordion-panel[data-open="true"] { grid-template-rows:1fr; opacity:1 }
-.accordion-panel > div { min-height:0; overflow:hidden }
-.expand svg { transition:transform 240ms ease }
+.reserve-options { background:var(--blush); border-radius:9px; text-align:left; padding:10px 11px; transition:background-color 200ms ease }
+.reserve-options[data-disabled="true"] { background:#f1f2f4; color:var(--muted); cursor:default }
+.reserve-options[data-disabled="true"] .icon-tile,
+.reserve-options[data-disabled="true"] .quantity-summary { background:#e6e8eb; color:inherit }
+.reserve-options[data-disabled="true"] .quantity-summary svg { color:inherit }
 .reserve-heading { display:flex; align-items:center; gap:5px }
 .reserve-heading .icon-tile { margin-right:5px }
-.accordion-title { text-align:left; font-size:14px; font-weight:700; min-height:34px }
+.reserve-heading h3 { margin:0; font-size:14px; font-weight:700 }
 .info-icon { color:#63656b; width:19px; height:28px }
-.expand { margin-left:auto; width:22px; height:28px; color:#55595d }
 .reservation-guidance { margin:0 0 0 44px; color:var(--muted); font-size:12px; line-height:1.45 }
 @media (max-width:350px) { .reservation-guidance { min-height:2lh } }
 .segments { width:46%; min-width:156px; display:flex; border:1px solid #dedde0; margin:14px auto 2px; border-radius:22px; overflow:hidden; background:white }
 .segments button { flex:1; min-height:29px; font-weight:600 }
+.segments button:disabled[aria-pressed=true] { background:#d8dadd; color:#62666b }
 .segments button + button { border-left:1px solid #eee }
 .quantity-summary { width:fit-content; max-width:100%; display:flex; align-items:center; gap:7px; margin:8px auto 0; font-size:13px; background:#f9e0e8; padding:5px 12px; border-radius:20px }
 .quantity-summary svg { color:var(--brand) }

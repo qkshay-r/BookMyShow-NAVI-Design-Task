@@ -15,8 +15,8 @@ Open the local URL printed by Vite. The interface fills a phone viewport and sta
 
 ## Follow the 4 + 2 journey
 
-1. Leave the quantity at four. Expand **Reserve extra seats**, choose **2**, then select **Select Seats**.
-2. Tap **E6, E7, E8, E9** for the purchase, then **E10, E11** for the hold. Tapping a selected seat removes it. The remaining selections retain their tap order.
+1. Leave the quantity at four. Under **Reserve extra seats**, choose **2**, then select **Select Seats**.
+2. Tap **E6**. Seats **E6 through E9** fill green, followed by **E10 and E11** in yellow. A run stops at a sold seat, aisle, or row end. Tap a coloured seat to remove it individually, then tap an available seat to refill missing greens first and yellows second.
 3. Tap **Pay ₹1,080** to review the ticket subtotal and ₹184.08 demo fee. **Continue** opens the ₹1,264.08 payment simulation. **Pay together** includes all six tickets for ₹1,896.12. The bin removes the extras.
 4. Complete the simulation. **Your Ticket** shows the paid receipt and a separate unpaid reservation. Refresh or reopen the same browser origin to resume it.
 5. Choose **Pay for 2 reserved seats** and complete the ₹632.04 payment. A second receipt confirms E10 and E11. The first receipt keeps its original seats and total.
@@ -72,7 +72,7 @@ src/
     VehicleIllustration.tsx Seat-count artwork for bicycles, scooters and group vehicles
     Tickets.tsx            Confirmed ticket, reservation card and countdown
   screens/
-    Quantity.tsx           Quantity sheet and reservation accordion
+    Quantity.tsx           Quantity sheet and reservation options
     SeatMap.tsx            Seat grid, group summary, legend and booking action
     ReviewPayment.tsx      Booking review and reusable payment simulation
     Ticket.tsx             Paid receipts and outstanding reservation

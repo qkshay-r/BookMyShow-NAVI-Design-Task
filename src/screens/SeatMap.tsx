@@ -12,7 +12,7 @@ function SeatLegend() {
 }
 export function SeatMap({booking: b}: {booking: Booking}) {
   const [info, setInfo] = useState(false)
-  const left = b.quantity + b.extras - b.selected.length
+  const left = b.quantity + b.extras - b.selected.length - b.reservedSelection.length
   const nowLeft = Math.max(0, b.quantity - b.selected.length)
   return <><Header movie/><Showtime count={b.quantity} reserved={b.extras} edit={() => send({ type: 'back' })}/>
     <main className="scroll map-body">{b.extras > 0 && <section className="group-banner"><span className="icon-tile"><UsersRound/></span>
@@ -21,7 +21,7 @@ export function SeatMap({booking: b}: {booking: Booking}) {
     <SeatGrid booking={b}/><div className="screen-end"><div className="cinema-screen"><i/></div><p>All eyes this way please!</p></div>
     {b.extras > 0 && <div className="hold-note"><span className="icon-tile"><Clock3/></span><div><b>Reserved seats are kept for 10 minutes</b><p>You can purchase the {b.extras} reserved {plural(b.extras,'seat')} after booking.</p></div></div>}
     </main><SeatLegend/><div className="offer"><b className="bank-check">✔</b><span>YES Private Debit Card Offer</span><small>1/3<i>━ ▬ ▬</i></small></div>
-    <Footer><div className="selection-hint" aria-live="polite">{left > 0 ? nowLeft > 0 ? 'Select ' + nowLeft + ' ' + plural(nowLeft,'seat') + ' to book now' : 'Select ' + left + ' extra ' + plural(left,'seat') + ' to reserve' : b.selected.slice(0,b.quantity).join(', ') + (b.extras ? ' · ' + b.extras + ' to reserve' : '')}</div>
+    <Footer><div className="selection-hint" aria-live="polite">{left > 0 ? nowLeft > 0 ? 'Select ' + nowLeft + ' ' + plural(nowLeft,'seat') + ' to book now' : 'Select ' + left + ' extra ' + plural(left,'seat') + ' to reserve' : b.selected.join(', ') + (b.extras ? ' · ' + b.extras + ' to reserve' : '')}</div>
     <Button disabled={left > 0} onClick={() => send({ type: 'review' })}>Pay {money(b.quantity * SHOW.ticketPaise,0)}</Button></Footer>
-    {info && <Dialog title="Group booking" onClose={() => setInfo(false)}><p>Choose your {b.quantity} book-now seats first, then choose {b.extras} nearby {plural(b.extras,'seat')} for later. Your 10-minute hold begins once the first payment succeeds.</p></Dialog>}</>
+    {info && <Dialog title="Group booking" onClose={() => setInfo(false)}><p>Tap a starting seat to fill the row to the right. Green seats fill first, followed by yellow seats for later. Tap a coloured seat to remove it. Your 10-minute hold begins once the first payment succeeds.</p></Dialog>}</>
 }

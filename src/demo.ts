@@ -5,6 +5,7 @@ export const SHOW = {
   initialSeats: ['E6', 'E7', 'E8', 'E9'], extraSeats: ['E10', 'E11'],
 }
 export const ROWS = ['A', 'B', 'C', 'D', 'E', 'F', 'G'] as const
+export const aisleBefore = (row: string, index: number) => row < 'E' && index === (row === 'A' ? 8 : 11)
 export const rowSeats = (row: string) => Array.from({ length: row === 'A' ? 11 : row < 'E' ? 13 : 11 }, (_, i) => row + (i + 1))
 export const sold = (seat: string) => seat.startsWith('C') || ['A7', 'A8'].includes(seat)
 export const available = new Set(ROWS.flatMap(rowSeats).filter(s => !sold(s)))
