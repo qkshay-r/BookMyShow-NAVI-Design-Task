@@ -99,6 +99,10 @@ dialog::backdrop { background:#17192270 }
 .sheet-rule { margin:15px 0; border-top:1px solid var(--line) }
 .reserve-accordion { background:var(--blush); border-radius:9px; text-align:left; padding:10px 11px; cursor:pointer; transition:background-color 200ms ease, box-shadow 200ms ease }
 .reserve-accordion:hover { background:#fbe9ef }
+.reserve-accordion[data-disabled="true"] { background:#f1f2f4; color:var(--muted); cursor:default }
+.reserve-accordion[data-disabled="true"] .icon-tile,
+.reserve-accordion[data-disabled="true"] .quantity-summary { background:#e6e8eb; color:inherit }
+.reserve-accordion[data-disabled="true"] .quantity-summary svg { color:inherit }
 .reserve-accordion:has(.accordion-panel[data-open="true"]) { box-shadow:0 2px 10px #ee34550c }
 .accordion-panel { display:grid; grid-template-rows:0fr; opacity:0; transition:grid-template-rows 240ms ease, opacity 180ms ease }
 .accordion-panel[data-open="true"] { grid-template-rows:1fr; opacity:1 }
@@ -113,8 +117,7 @@ dialog::backdrop { background:#17192270 }
 .segments { width:46%; min-width:156px; display:flex; border:1px solid #dedde0; margin:14px auto 2px; border-radius:22px; overflow:hidden; background:white }
 .segments button { flex:1; min-height:29px; font-weight:600 }
 .segments button + button { border-left:1px solid #eee }
-.quantity-summary { width:max-content; display:flex; align-items:center; gap:7px; margin:15px auto 0; font-size:13px; background:#fdebf1; padding:6px 13px; border-radius:20px }
-.quantity-summary { animation:summary-in 220ms ease-out both }
+.quantity-summary { width:fit-content; max-width:100%; display:flex; align-items:center; gap:7px; margin:8px auto 0; font-size:13px; background:#f9e0e8; padding:5px 12px; border-radius:20px }
 .quantity-summary svg { color:var(--brand) }
 .categories { display:flex; justify-content:center; gap:46px; text-align:left; border-top:1px solid var(--line); margin:19px 0 17px; padding-top:12px }
 .categories div { display:grid; gap:2px }
@@ -245,6 +248,9 @@ dialog::backdrop { background:#17192270 }
 .ticket-total b { font-size:16px }
 .reservation-card { background:white; border:1px solid #dcdfe6; border-radius:12px; padding:16px }
 .reservation-card>p { color:var(--muted); font-size:14px; margin:10px 0 }
+.reservation-cancelled { border-color:#f0bac6; background:#fff5f7; animation:summary-in 220ms ease-out both }
+.cancellation-heading { display:flex; align-items:center; gap:8px; color:var(--brand-dark) }
+.reservation-cancelled>p:last-child { margin-bottom:0 }
 .reservation-card>.reserved-list { margin:4px 0 12px; font-size:13px }
 .countdown { display:flex; align-items:center; gap:9px; border:1px solid #f9becb; background:#fff1f4; color:#b21e42; padding:10px 12px; border-radius:8px; margin:12px 0 }
 .countdown span { display:grid }

@@ -32,7 +32,7 @@ export function StatusBar({ booking }: {booking: Booking}) {
     <button className="demo-icon" aria-label="Demo controls" title="Demo controls" onClick={() => setDemo(true)}><CodeXml size={15}/></button>
     {demo && <Dialog title="Demo controls" onClose={() => setDemo(false)}><div className="demo-list">
       <button onClick={() => run('preset')}>Load default 4 + 2 booking</button><button disabled={!active} onClick={() => run('shorten')}>Advance to 30 seconds remaining</button>
-      <button disabled={!active} onClick={() => run('expire')}>Expire reservation immediately</button><button onClick={() => run('reset')}>Reset prototype</button></div></Dialog>}</>
+      <button disabled={!active} onClick={() => run('expire')}>Cancel reservation now (simulate expiry)</button><button onClick={() => run('reset')}>Reset prototype</button></div></Dialog>}</>
 }
 export function Header({ title, movie = false, onBack }: { title?: string; movie?: boolean; onBack?: () => void }) {
   return <header className={'header ' + (movie ? 'movie-header' : '')}>

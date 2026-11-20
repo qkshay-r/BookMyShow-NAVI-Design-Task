@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { ChevronRight, Clock3, Share2 } from 'lucide-react'
+import { ChevronRight, Clock3, ClockAlert, Share2 } from 'lucide-react'
 import type { Booking, Receipt } from '../booking/model'
 import { send } from '../booking/useBooking'
 import { money, plural, seatLabel, SHOW, total } from '../demo'
@@ -43,6 +43,11 @@ export function Countdown({expiresAt}: {expiresAt: number}) {
 export function ReservationCard({booking: b, onShare}: {booking: Booking; onShare: () => void}) {
   const r = b.reservation
   if (['none','converted'].includes(r.status)) return null
+  if (r.status === 'expired') return <section className="reservation-card reservation-cancelled" role="status">
+    <div className="cancellation-heading"><ClockAlert size={19} aria-hidden="true"/><h2>Reservation cancelled</h2></div>
+    <p>The timer expired and {r.seats.map(seatLabel).join(', ')} {r.seats.length === 1 ? 'was' : 'were'} released.</p>
+    <p>Your paid tickets are confirmed.</p>
+  </section>
   const n = r.seats.length
   if (r.status !== 'active') return <section className="reservation-card inactive"><h2>Reservation {r.status}</h2><p>{r.seats.map(seatLabel).join(', ')} · {r.status === 'unavailable' ? 'Could not be held' : 'Released'}</p><p>Your purchased tickets remain confirmed.</p></section>
   return <section className="reservation-card"><h2>{n} Reserved {plural(n,'seat')}</h2><p className="reserved-list">{r.seats.map(seatLabel).join(', ')}</p>

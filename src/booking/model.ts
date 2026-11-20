@@ -1,5 +1,7 @@
 import { available, SHOW } from '../demo'
 
+export const MIN_RESERVATION_TICKETS = 4
+
 export type Screen = 'quantity' | 'map' | 'review' | 'payment' | 'ticket'
 type Purchase = 'selecting' | 'reviewing' | 'payment_pending' | 'payment_failed' | 'purchased'
 type Hold = 'none' | 'active' | 'expired' | 'released' | 'unavailable' | 'converted'
@@ -23,6 +25,9 @@ export type Action =
   | { type: 'additional'; seats?: string[] }
 
 export function reconcile(s: Booking, now: number): Booking {
+  if (!s.receipt && s.quantity < MIN_RESERVATION_TICKETS && s.extras > 0) {
+    return { ...s, extras: 0, selected: s.selected.slice(0, s.quantity) }
+  }
   if (s.reservation.status !== 'active' || now < (s.reservation.expiresAt ?? 0)) return s
   return { ...s, screen: 'ticket', additional: 'idle', payingSeats: [],
     reservation: { ...s.reservation, status: 'expired' } }
@@ -45,9 +50,10 @@ export function transition(previous: Booking, action: Action, now: number): Book
     case 'quantity':
     case 'extras': {
       if (s.screen !== 'quantity' || !Number.isInteger(action.value)) return s
+      if (action.type === 'extras' && s.quantity < MIN_RESERVATION_TICKETS) return s
       const min = action.type === 'quantity' ? 1 : 0
       if (action.value < min || action.value > (min ? 10 : 2)) return s
-      const next = { ...s, [action.type]: action.value }
+      const next = reconcile({ ...s, [action.type]: action.value }, now)
       return { ...next, selected: chosen.slice(0, next.quantity + next.extras) }
     }
     case 'map': return s.screen === 'quantity' ? { ...s, screen: 'map' } : s
