@@ -40,7 +40,9 @@ export function Header({ title, movie = false, onBack }: { title?: string; movie
     <div>{movie ? <><h1>{SHOW.movie}</h1><p>{SHOW.cinema}</p></> : <h1>{title}</h1>}</div></header>
 }
 export function Footer({children}: {children: ReactNode}) { return <footer className="footer">{children}<div className="home-line"/></footer> }
-export function Showtime({ count, edit }: { count: number; edit?: () => void }) {
-  return <section className="showtime"><div className="flex items-center justify-between"><b>{SHOW.date}</b><button onClick={edit} className="edit-tickets"><span aria-hidden="true">✎</span> {count} {count === 1 ? 'Ticket' : 'Tickets'}</button></div>
+export function Showtime({ count, reserved = 0, edit }: { count: number; reserved?: number; edit?: () => void }) {
+  const ticketCount = reserved > 0 ? `${count}+${reserved}` : count
+  const editLabel = reserved > 0 ? `Edit tickets: ${count} to book now and ${reserved} to reserve` : undefined
+  return <section className="showtime"><div className="flex items-center justify-between"><b>{SHOW.date}</b><button type="button" onClick={edit} aria-label={editLabel} className="edit-tickets"><span aria-hidden="true">✎</span> {ticketCount} {count === 1 && reserved === 0 ? 'Ticket' : 'Tickets'}</button></div>
   <span className="time-chip">{SHOW.time}</span></section>
 }

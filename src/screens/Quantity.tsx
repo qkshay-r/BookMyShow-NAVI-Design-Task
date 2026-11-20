@@ -17,9 +17,11 @@ export function ReservationAccordion({ booking }: {booking: Booking}) {
       <button aria-expanded={open} aria-controls="reserve-settings" className="accordion-title" disabled={!eligible}>Reserve extra seats</button>
       <button className="info-icon" aria-label="About reserving extra seats" disabled={!eligible} onClick={event => { event.stopPropagation(); setInfo(true) }}><Info size={15}/></button>
       <span className="expand" aria-hidden="true"><ChevronDown size={20} style={{ transform: open ? 'rotate(180deg)' : undefined }}/></span></div>
-    <div className="accordion-panel" data-open={open} aria-hidden={!open} inert={!open}><div id="reserve-settings"><p>Temporarily reserve up to 2 nearby seats for late confirmations. Unpaid reserved seats are released after 10 min.</p>
+    <p className="reservation-guidance">{eligible
+      ? 'Temporarily reserve up to 2 nearby seats.'
+      : `Select at least ${MIN_RESERVATION_TICKETS} tickets to reserve extra seats.`}</p>
+    <div className="accordion-panel" data-open={open} aria-hidden={!open} inert={!open}><div id="reserve-settings">
       <div className="segments" aria-label="Extra seat quantity">{[0,1,2].map(n => <button key={n} aria-label={n + ' extra seats'} aria-pressed={booking.extras === n} disabled={!eligible} onClick={event => { event.stopPropagation(); send({ type: 'extras', value: n }) }}>{n}</button>)}</div></div></div>
-    {!eligible && <p>Select at least {MIN_RESERVATION_TICKETS} tickets to reserve extra seats.</p>}
     <div className="quantity-summary">
       <Armchair size={16} aria-hidden="true"/>
       {booking.quantity} to book now <span aria-hidden="true">•</span> {booking.extras} to reserve

@@ -14,7 +14,7 @@ export function SeatMap({booking: b}: {booking: Booking}) {
   const [info, setInfo] = useState(false)
   const left = b.quantity + b.extras - b.selected.length
   const nowLeft = Math.max(0, b.quantity - b.selected.length)
-  return <><Header movie/><Showtime count={b.quantity} edit={() => send({ type: 'back' })}/>
+  return <><Header movie/><Showtime count={b.quantity} reserved={b.extras} edit={() => send({ type: 'back' })}/>
     <main className="scroll map-body">{b.extras > 0 && <section className="group-banner"><span className="icon-tile"><UsersRound/></span>
       <div><button onClick={() => setInfo(true)} className="group-title">Group booking <Info size={14}/></button><p>{b.quantity} seats now + {b.extras} reserved for later.</p></div>
       <div className="count-pair"><b>{b.quantity}</b> + <b>{b.extras}</b></div></section>}

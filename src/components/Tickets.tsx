@@ -40,7 +40,7 @@ export function Countdown({expiresAt}: {expiresAt: number}) {
   const time = [Math.floor(s/60),s%60].map(n=>String(n).padStart(2,'0')).join(':')
   return <div className="countdown"><Clock3 size={21}/><span><b>Reserved for</b><small>Minutes remaining</small></span><strong role="timer">{time}</strong></div>
 }
-export function ReservationCard({booking: b, onShare}: {booking: Booking; onShare: () => void}) {
+export function ReservationCard({booking: b}: {booking: Booking}) {
   const r = b.reservation
   if (['none','converted'].includes(r.status)) return null
   if (r.status === 'expired') return <section className="reservation-card reservation-cancelled" role="status">
@@ -54,5 +54,5 @@ export function ReservationCard({booking: b, onShare}: {booking: Booking; onShar
     <p>Complete payment before your reservation expires.</p><Countdown expiresAt={r.expiresAt!}/>
     <div className="reserved-price"><span>Total for {n} {plural(n,'seat')}</span><b>{money(total(n))}</b></div>
     <Button onClick={() => send({type:'additional'})}>Pay for {n} reserved {plural(n,'seat')}<ChevronRight size={18}/></Button>
-    <Button secondary onClick={onShare}><Share2 size={16}/>Share Booking Details</Button></section>
+    <Button secondary disabled><Share2 size={16}/>Share Booking Details</Button></section>
 }

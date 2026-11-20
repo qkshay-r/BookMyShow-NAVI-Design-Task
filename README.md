@@ -75,7 +75,7 @@ src/
     Quantity.tsx           Quantity sheet and reservation accordion
     SeatMap.tsx            Seat grid, group summary, legend and booking action
     ReviewPayment.tsx      Booking review and reusable payment simulation
-    Ticket.tsx             Paid receipts, outstanding reservation and sharing
+    Ticket.tsx             Paid receipts and outstanding reservation
 ```
 
 ## Integrating the next designs
