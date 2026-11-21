@@ -8,12 +8,13 @@ type Hold = 'none' | 'active' | 'expired' | 'released' | 'unavailable' | 'conver
 export interface Receipt { seats: string[]; id: string }
 export interface Booking {
   version: 1; screen: Screen; quantity: number; extras: number; selected: string[]; reservedSelection: string[]
+  hasAutofilled: boolean
   purchase: Purchase; receipt: Receipt | null; additionalReceipts: Receipt[]
   reservation: { status: Hold; seats: string[]; expiresAt: number | null }
   additional: 'idle' | 'pending' | 'failed'; payingSeats: string[]
 }
 export const fresh = (): Booking => ({
-  version: 1, screen: 'quantity', quantity: 4, extras: 0, selected: [], reservedSelection: [],
+  version: 1, screen: 'quantity', quantity: 4, extras: 0, selected: [], reservedSelection: [], hasAutofilled: false,
   purchase: 'selecting', receipt: null, additionalReceipts: [],
   reservation: { status: 'none', seats: [], expiresAt: null }, additional: 'idle', payingSeats: [],
 })
@@ -28,6 +29,9 @@ export function reconcile(s: Booking, now: number): Booking {
   // Older saved bookings stored the reserved seats after the book-now seats.
   if (!Array.isArray(s.reservedSelection)) {
     s = { ...s, selected: s.selected.slice(0, s.quantity), reservedSelection: s.selected.slice(s.quantity) }
+  }
+  if (typeof s.hasAutofilled !== 'boolean') {
+    s = { ...s, hasAutofilled: s.selected.length > 0 || s.reservedSelection.length > 0 || Boolean(s.receipt) }
   }
   if (!s.receipt && s.quantity < MIN_RESERVATION_TICKETS && s.extras > 0) {
     return { ...s, extras: 0, selected: s.selected.slice(0, s.quantity), reservedSelection: [] }
@@ -52,8 +56,9 @@ function pickSeats(s: Booking, seat: string): Booking {
     if (selected.length < s.quantity) selected.push(id)
     else if (reservedSelection.length < s.extras) reservedSelection.push(id)
     else break
+    if (s.hasAutofilled) break
   }
-  return { ...s, selected, reservedSelection }
+  return { ...s, selected, reservedSelection, hasAutofilled: true }
 }
 export function transition(previous: Booking, action: Action, now: number): Booking {
   const s = reconcile(previous, now)
@@ -61,7 +66,7 @@ export function transition(previous: Booking, action: Action, now: number): Book
   const unpaid = s.reservation
   switch (action.type) {
     case 'reset': return fresh()
-    case 'preset': return { ...fresh(), screen: 'map', extras: 2, selected: SHOW.initialSeats, reservedSelection: SHOW.extraSeats }
+    case 'preset': return { ...fresh(), screen: 'map', extras: 2, selected: SHOW.initialSeats, reservedSelection: SHOW.extraSeats, hasAutofilled: true }
     case 'tick': return s
     case 'back':
       if (s.screen === 'map') return { ...s, screen: 'quantity', quantity: Math.min(10, s.quantity),
