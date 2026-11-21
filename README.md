@@ -93,7 +93,7 @@ The browser storage key is `bms.group-booking.v1`. A fresh page load replaces th
 
 ## Visual decisions and remaining polish
 
-The interaction uses the Android-style layout, local Roboto, vehicle illustrations for all ten seat counts and a dummy QR pattern. The sheet initially selects four tickets, with the optional reservation controls expanded. Before payment, the sheet says “to book now” and “to reserve.” The ticket uses the Scene poster and an M-Ticket ribbon. The status bar, bank offer strip and poster serve as visual context for the booking flow.
+The interaction uses the Android-style layout, local Roboto, vehicle illustrations for all ten seat counts and a dummy QR pattern. The sheet initially selects three tickets, with the optional reservation controls expanded and enabled from four tickets. Before payment, the sheet says “to book now” + “to reserve,” and the Select seats button shows their combined count. The ticket uses the Scene poster and an M-Ticket ribbon. The status bar, bank offer strip and poster serve as visual context for the booking flow.
 
 The vehicle artwork, status icons and smallest spacing details are approximations. The next design pass can replace those assets and refine device-specific safe-area spacing. The expiry and payment-failure messages are intentionally simple until the next reference screens arrive.
 

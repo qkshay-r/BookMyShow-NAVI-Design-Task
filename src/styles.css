@@ -110,9 +110,8 @@ dialog::backdrop { background:#17192270 }
 .segments button { flex:1; min-height:29px; font-weight:600 }
 .segments button:disabled[aria-pressed=true] { background:#d8dadd; color:#62666b }
 .segments button + button { border-left:1px solid #eee }
-.quantity-summary { display:grid; grid-template-columns:1fr 1fr; align-items:center; border-top:1px solid var(--line); margin-top:13px; padding:11px 0; font-size:14px; font-weight:500 }
+.quantity-summary { display:grid; grid-template-columns:1fr auto 1fr; align-items:center; border-top:1px solid var(--line); margin-top:13px; padding:11px 0; font-size:14px; font-weight:500 }
 .quantity-summary span { display:flex; align-items:center; justify-content:center; gap:6px }
-.quantity-summary span + span { border-left:1px solid var(--line) }
 .quantity-summary strong { font-size:22px; line-height:1; font-weight:700; font-variant-numeric:tabular-nums }
 .categories { display:flex; justify-content:center; gap:46px; text-align:left; border-top:1px solid var(--line); margin:19px 0 17px; padding-top:12px }
 .categories div { display:grid; gap:2px }

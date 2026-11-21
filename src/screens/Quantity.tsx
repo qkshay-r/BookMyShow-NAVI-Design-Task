@@ -22,6 +22,7 @@ function ReservationOptions({ booking }: {booking: Booking}) {
         onClick={() => send({ type: 'extras', value: n })}>{n}</button>)}</div>
     <output className="quantity-summary" aria-label="Seat selection summary" aria-atomic="true">
       <span><strong>{booking.quantity}</strong> to book now</span>
+      <span aria-hidden="true">+</span>
       <span><strong>{booking.extras}</strong> to reserve</span>
     </output>
     </section>{info && <Dialog title="Reserve extra seats" onClose={() => setInfo(false)}><p>Choose up to two available seats to reserve. Your 10-minute hold starts after you pay for the first tickets. You can buy the extra seats from Your Ticket before the hold expires.</p></Dialog>}</>
@@ -34,5 +35,5 @@ export function Quantity({ booking: b }: {booking: Booking}) {
     <div aria-label="Tickets to purchase" className="quantities">{Array.from({ length: count }, (_, i) => i+1).map(n => <button key={n} aria-label={n + ' tickets'} aria-pressed={n === b.quantity} onClick={() => send({ type: 'quantity', value: n })}>{n}</button>)}</div>
     <div className="sheet-rule"/><ReservationOptions booking={b}/>
     <div className="categories">{['CLUB','ROYAL'].map(tier => <div key={tier}><small>{tier}</small><b>{money(SHOW.ticketPaise,0)}</b><strong>AVAILABLE</strong></div>)}</div>
-    <Button onClick={() => send({ type: 'map' })}>Select Seats</Button><div className="home-line"/></section></>
+    <Button onClick={() => send({ type: 'map' })}>Select {b.quantity + b.extras} {b.quantity + b.extras === 1 ? 'seat' : 'seats'}</Button><div className="home-line"/></section></>
 }
