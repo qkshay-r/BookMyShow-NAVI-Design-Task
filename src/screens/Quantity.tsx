@@ -15,7 +15,7 @@ function ReservationOptions({ booking }: {booking: Booking}) {
       <h3 id="reserve-title">Reserve extra seats</h3>
       <button className="info-icon" aria-label="About reserving extra seats" disabled={!eligible} onClick={() => setInfo(true)}><Info size={15}/></button></div>
     <p className="reservation-guidance">{eligible
-      ? 'Temporarily reserve up to 2 nearby seats.'
+      ? 'Temporarily reserve up to 2 extra seats.'
       : `Select at least ${MIN_RESERVATION_TICKETS} tickets to reserve extra seats.`}</p>
     <div className="segments" role="group" aria-label="Extra seat quantity">{[0,1,2].map(n =>
       <button key={n} aria-label={n + ' extra seats'} aria-pressed={booking.extras === n} disabled={!eligible}
@@ -24,7 +24,7 @@ function ReservationOptions({ booking }: {booking: Booking}) {
       <span><strong>{booking.quantity}</strong> to book now</span>
       <span><strong>{booking.extras}</strong> to reserve</span>
     </output>
-    </section>{info && <Dialog title="Reserve extra seats" onClose={() => setInfo(false)}><p>Choose up to two extra seats beside your group. Your 10-minute hold starts after you pay for the first tickets. You can buy the extra seats from Your Ticket before the hold expires.</p></Dialog>}</>
+    </section>{info && <Dialog title="Reserve extra seats" onClose={() => setInfo(false)}><p>Choose up to two available seats to reserve. Your 10-minute hold starts after you pay for the first tickets. You can buy the extra seats from Your Ticket before the hold expires.</p></Dialog>}</>
 }
 export function Quantity({ booking: b }: {booking: Booking}) {
   const count = Math.max(10, b.quantity)

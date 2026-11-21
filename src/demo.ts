@@ -24,9 +24,6 @@ export function nearestBookedSeat(seat: string, booked: string[], reserved: stri
   const distance = (id: string) => Math.abs(Number(id.slice(1)) - Number(seat.slice(1)))
   return run.filter(id => booked.includes(id)).sort((a, b) => distance(a) - distance(b))[0]
 }
-export function reservationsConnected(booked: string[], reserved: string[]) {
-  return reserved.every(seat => Boolean(nearestBookedSeat(seat, booked, reserved)))
-}
 export const seatLabel = (seat: string) => (seat[0] < 'E' ? 'RY-' : 'CL-') + seat
 export const money = (paise: number, decimals = 2) =>
   '₹' + (paise / 100).toLocaleString('en-IN', { minimumFractionDigits: decimals, maximumFractionDigits: decimals })

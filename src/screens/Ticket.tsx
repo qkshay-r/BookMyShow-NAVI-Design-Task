@@ -11,12 +11,14 @@ function ChooseSeat({booking, close}: {booking: Booking; close: () => void}) {
   const booked = [booking.receipt!, ...booking.additionalReceipts].flatMap(receipt => receipt.seats)
   const options = seats.map(seat => {
     const neighbour = nearestBookedSeat(seat, booked, seats)
-    const step = Number(neighbour?.slice(1)) - Number(seat.slice(1))
+    const location = `Row ${seat[0]}, seat ${seat.slice(1)}`
+    if (!neighbour) return { seat, beside: false, description: location, summary: location }
+    const step = Number(neighbour.slice(1)) - Number(seat.slice(1))
     const between = seat[0] + (Number(seat.slice(1)) + Math.sign(step))
     const beside = Math.abs(step) === 1
     const description = beside ? `Next to your group · directly beside ${neighbour}`
       : `One seat away · ${between} is between you and ${neighbour}`
-    return { seat, beside, description }
+    return { seat, beside, description, summary: beside ? 'Beside your group' : 'One seat away' }
   }).sort((a, b) => Number(b.beside) - Number(a.beside))
   const [choice, setChoice] = useState(options[0].seat)
   const selected = options.find(option => option.seat === choice) ?? options[0]
@@ -28,7 +30,7 @@ function ChooseSeat({booking, close}: {booking: Booking; close: () => void}) {
       </label>)}</fieldset>
       <p>Only the selected seat will be paid for. The other seat stays reserved until the hold expires.</p>
       <section className="choice-total"><div><b>1 seat · {seatLabel(selected.seat)}</b><strong>{money(total(1))}</strong></div>
-        <p>{selected.beside ? 'Beside your group' : 'One seat away'}</p>
+        <p>{selected.summary}</p>
         <Button onClick={() => send({type:'additional', seats:[selected.seat]})}>Pay for seat {selected.seat}<ChevronRight size={17}/></Button></section>
     </main><div className="ticket-home"><div className="home-line"/></div></>
 }

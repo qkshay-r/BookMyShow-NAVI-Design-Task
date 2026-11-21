@@ -1,4 +1,4 @@
-import { aisleBefore, available, nearestBookedSeat, rowSeats, reservationsConnected, SHOW } from '../demo'
+import { aisleBefore, available, rowSeats, SHOW } from '../demo'
 
 export const MIN_RESERVATION_TICKETS = 4
 
@@ -58,7 +58,7 @@ function pickSeats(s: Booking, seat: string): Booking {
     if (!available.has(id) || (i > start && aisleBefore(row, i))) break
     if (selected.includes(id) || reservedSelection.includes(id)) continue
     if (selected.length < s.quantity) selected.push(id)
-    else if (reservedSelection.length < s.extras && nearestBookedSeat(id, selected, reservedSelection)) reservedSelection.push(id)
+    else if (reservedSelection.length < s.extras) reservedSelection.push(id)
     else break
     if (s.hasAutofilled) break
   }
@@ -92,7 +92,7 @@ export function transition(previous: Booking, action: Action, now: number): Book
     }
     case 'map': return s.screen === 'quantity' ? { ...s, screen: 'map' } : s
     case 'select': return pickSeats(s, action.seat)
-    case 'review': return s.screen === 'map' && chosen.length === s.quantity && s.reservedSelection.length === s.extras && reservationsConnected(chosen, s.reservedSelection)
+    case 'review': return s.screen === 'map' && chosen.length === s.quantity && s.reservedSelection.length === s.extras
       ? { ...s, screen: 'review', purchase: 'reviewing' } : s
     case 'together':
     case 'remove': {
@@ -107,7 +107,7 @@ export function transition(previous: Booking, action: Action, now: number): Book
       const selected = chosen.filter(id => !seats.includes(id))
       return { ...s, selected, quantity: selected.length, extras: seats.length, reservedSelection: seats, reviewChange: undefined }
     }
-    case 'checkout': return s.screen === 'review' && reservationsConnected(chosen, s.reservedSelection) ? { ...s, screen: 'payment', purchase: 'payment_pending' } : s
+    case 'checkout': return s.screen === 'review' ? { ...s, screen: 'payment', purchase: 'payment_pending' } : s
     case 'additional': {
       if (s.screen !== 'ticket' || unpaid.status !== 'active') return s
       const seats = [...new Set(action.seats ?? unpaid.seats)]

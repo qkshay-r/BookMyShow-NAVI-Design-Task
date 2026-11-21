@@ -200,7 +200,6 @@ dialog::backdrop { background:#17192270 }
 .extra-actions button + button { margin-left:auto; color:var(--muted) }
 .review-dialog-actions { display:flex; gap:10px }
 .review-dialog-actions .secondary { margin-top:0 }
-.seat.available:disabled { opacity:.35 }
 .pay-bar>div { display:grid; gap:1px }
 .pay-bar small { color:var(--muted); font-weight:600; font-size:12px }
 .pay-bar strong { font-size:18px }
