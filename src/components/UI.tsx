@@ -14,6 +14,13 @@ export function Dialog({ title, children, onClose }: {title: string; children: R
     <div className="dialog-body"><div className="flex items-center justify-between gap-3"><h2>{title}</h2><button aria-label="Close dialog" className="icon" onClick={onClose}><X size={19}/></button></div>{children}</div>
   </dialog>
 }
+export function DemoControls({ booking, onClose }: {booking: Booking; onClose: () => void}) {
+  const active = booking.reservation.status === 'active'
+  const run = (type: 'reset' | 'preset' | 'shorten' | 'expire') => { send({ type }); onClose() }
+  return <Dialog title="Demo controls" onClose={onClose}><div className="demo-list">
+    <button onClick={() => run('preset')}>Load default 4 + 2 booking</button><button disabled={!active} onClick={() => run('shorten')}>Advance to 30 seconds remaining</button>
+    <button disabled={!active} onClick={() => run('expire')}>Cancel reservation now (simulate expiry)</button><button onClick={() => run('reset')}>Reset prototype</button></div></Dialog>
+}
 export function StatusBar({ booking }: {booking: Booking}) {
   const [demo, setDemo] = useState(false)
   const [time, setTime] = useState(() => new Date())
@@ -23,16 +30,12 @@ export function StatusBar({ booking }: {booking: Booking}) {
     document.addEventListener('visibilitychange', refresh)
     return () => { window.clearInterval(timer); document.removeEventListener('visibilitychange', refresh) }
   }, [])
-  const active = booking.reservation.status === 'active'
-  const run = (type: 'reset' | 'preset' | 'shorten' | 'expire') => { send({ type }); setDemo(false) }
   const hour = time.getHours() % 12 || 12
   const displayTime = `${hour}:${String(time.getMinutes()).padStart(2, '0')}`
   return <><div className="statusbar"><b aria-label={`Current time ${time.toLocaleTimeString()}`}>{displayTime}</b>
     <div className="status-icons"><Wifi size={16} aria-label="Wi-Fi"/><Signal size={16} aria-label="Network"/><BatteryFull size={19} aria-label="Battery full"/></div></div>
     <button className="demo-icon" aria-label="Demo controls" title="Demo controls" onClick={() => setDemo(true)}><CodeXml size={15}/></button>
-    {demo && <Dialog title="Demo controls" onClose={() => setDemo(false)}><div className="demo-list">
-      <button onClick={() => run('preset')}>Load default 4 + 2 booking</button><button disabled={!active} onClick={() => run('shorten')}>Advance to 30 seconds remaining</button>
-      <button disabled={!active} onClick={() => run('expire')}>Cancel reservation now (simulate expiry)</button><button onClick={() => run('reset')}>Reset prototype</button></div></Dialog>}</>
+    {demo && <DemoControls booking={booking} onClose={() => setDemo(false)}/>}</>
 }
 export function Header({ title, movie = false, onBack }: { title?: string; movie?: boolean; onBack?: () => void }) {
   return <header className={'header ' + (movie ? 'movie-header' : '')}>

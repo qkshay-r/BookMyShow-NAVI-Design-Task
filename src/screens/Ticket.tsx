@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { ChevronRight, Share2, X } from 'lucide-react'
 import type { Booking } from '../booking/model'
 import { send } from '../booking/useBooking'
-import { Button, Dialog } from '../components/UI'
+import { Button, DemoControls, Dialog } from '../components/UI'
 import { ConfirmedTicket, ReservationCard } from '../components/Tickets'
 import { money, nearestBookedSeat, seatLabel, total } from '../demo'
 
@@ -37,6 +37,7 @@ function ChooseSeat({booking, close}: {booking: Booking; close: () => void}) {
 
 export function Ticket({booking: b}: {booking: Booking}) {
   const [showClose, setShowClose] = useState(false)
+  const [showDemo, setShowDemo] = useState(false)
   const [choosing, setChoosing] = useState(false)
   if (choosing && b.reservation.status === 'active' && b.reservation.seats.length > 1) {
     return <ChooseSeat booking={b} close={() => setChoosing(false)}/>
@@ -45,6 +46,11 @@ export function Ticket({booking: b}: {booking: Booking}) {
   return <><header className="ticket-header"><h1>Your Ticket</h1><button type="button" className="icon" aria-label="Share ticket"><Share2 size={15}/></button>
     <button className="close-ticket" aria-label="Close ticket" onClick={() => setShowClose(true)}><X size={17}/></button></header>
     <main className="scroll ticket-stack">{receipts.map((r,i) => <ConfirmedTicket key={r.id} receipt={r} additional={i>0}/>)}<ReservationCard booking={b} chooseOne={() => setChoosing(true)}/></main><div className="ticket-home"><div className="home-line"/></div>
-    {showClose && <Dialog title="Your ticket is saved" onClose={() => setShowClose(false)}><p>You can close this tab and return to your booking on this device. Starting a new demo booking clears this one.</p><Button onClick={() => setShowClose(false)}>View ticket</Button><Button secondary onClick={() => send({type:'reset'})}>Start new demo booking</Button></Dialog>}
+    {showClose && <Dialog title="Your ticket is saved" onClose={() => setShowClose(false)}><p>You can close this tab and return to your booking on this device. Starting a new demo booking clears this one.</p>
+      <Button onClick={() => { setShowClose(false); send({type:'reset'}) }}>Start new demo booking</Button>
+      <Button secondary disabled={b.reservation.status !== 'active'} onClick={() => { setShowClose(false); send({type:'expire'}) }}>Simulate expiry</Button>
+      <Button secondary onClick={() => { setShowClose(false); setShowDemo(true) }}>Demo controls</Button>
+    </Dialog>}
+    {showDemo && <DemoControls booking={b} onClose={() => setShowDemo(false)}/>}
   </>
 }
