@@ -11,7 +11,8 @@ function read(fallback: Booking) {
   } catch { /* Storage may be disabled for this browser session. */ }
   return fallback
 }
-let current = reconcile(read(fresh()), Date.now())
+let current = fresh()
+try { localStorage.setItem(KEY, JSON.stringify(current)) } catch { /* Continue in memory when storage is disabled. */ }
 const listeners = new Set<() => void>()
 const subscribe = (fn: () => void) => { listeners.add(fn); return () => { listeners.delete(fn) } }
 function publish(next: Booking) {
