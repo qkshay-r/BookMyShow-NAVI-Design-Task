@@ -7,11 +7,11 @@ import type { Booking } from '../booking/model'
 export function Button({ children, secondary, ...props }: ButtonHTMLAttributes<HTMLButtonElement> & { secondary?: boolean }) {
   return <button {...props} className={secondary ? 'secondary' : 'primary'}>{children}</button>
 }
-export function Dialog({ title, children, onClose }: {title: string; children: ReactNode; onClose: () => void}) {
+export function Dialog({ title, label, children, onClose }: {title: string; label?: string; children: ReactNode; onClose: () => void}) {
   const ref = useRef<HTMLDialogElement>(null)
   useEffect(() => { const el = ref.current!; el.showModal(); return () => el.close() }, [])
   return <dialog ref={ref} aria-label={title} onCancel={onClose} onClick={e => { if (e.target === ref.current) onClose() }}>
-    <div className="dialog-body"><div className="flex items-center justify-between gap-3"><h2>{title}</h2><button aria-label="Close dialog" className="icon" onClick={onClose}><X size={19}/></button></div>{children}</div>
+    <div className="dialog-body">{label && <div className="dialog-label">{label}</div>}<div className="flex items-center justify-between gap-3"><h2>{title}</h2><button aria-label="Close dialog" className="icon" onClick={onClose}><X size={19}/></button></div>{children}</div>
   </dialog>
 }
 export function DemoControls({ booking, onClose }: {booking: Booking; onClose: () => void}) {

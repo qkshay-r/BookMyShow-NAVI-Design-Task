@@ -26,10 +26,14 @@ function App() {
   }, [])
   const Screen = screens[booking.screen]
   return <div key={resetVersion} className={'phone view-' + booking.screen}><StatusBar booking={booking}/><Screen booking={booking}/>
-    {showIntroduction && <Dialog title="Introducing +2 Seat Reservation" onClose={() => setShowIntroduction(false)}>
-      <p>Booking for a group? You can now <strong>reserve up to 2 extra seats</strong> when booking 4 or more tickets.</p>
-      <p>Pay for your confirmed friends now and keep 2 nearby seats reserved for another 10 minutes after payment.</p>
-      <p>If you don't purchase the extra seats within that time, they'll automatically become available to others.</p>
+    {showIntroduction && <Dialog title="+2 Seat Reservation" label="Designer's note" onClose={() => setShowIntroduction(false)}>
+      <p>The feature allows users to book confirmed seats while temporarily reserving nearby seats for friends who haven't decided yet. The following limits balance user flexibility with business needs.</p>
+      <h3 className="designer-note-heading">Why these limits?</h3>
+      <ul className="designer-note-limits">
+        <li><strong>Minimum 4 tickets:</strong> Ensures an initial purchase commitment before additional seats can be reserved.</li>
+        <li><strong>Maximum 2 extra seats:</strong> Limits the amount of unpaid inventory blocked from other moviegoers.</li>
+        <li><strong>10-minute limit:</strong> Gives friends a short window to confirm without holding seats indefinitely.</li>
+      </ul>
     </Dialog>}
   </div>
 }

@@ -69,6 +69,11 @@ dialog { padding:0; border:1px solid var(--line); border-radius:15px; width:min(
 dialog[open] { animation:dialog-in 200ms ease-out both }
 dialog::backdrop { background:#17192270 }
 .dialog-body { padding:20px }
+.dialog-label { margin-bottom:6px; color:var(--muted); font-size:11px; font-weight:500 }
+.designer-note-heading { margin:16px 0 8px; font-size:14px; font-weight:600 }
+.designer-note-limits { margin:0; padding-left:18px; list-style:disc; color:var(--muted); line-height:1.5 }
+.designer-note-limits li + li { margin-top:10px }
+.designer-note-limits strong { color:var(--ink) }
 .dialog-body h2 { font-size:19px }
 .dialog-body p { margin:12px 0; color:var(--muted) }
 .dialog-body .icon { width:28px; height:28px }
