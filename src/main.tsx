@@ -26,7 +26,7 @@ function App() {
   }, [])
   const Screen = screens[booking.screen]
   return <div key={resetVersion} className={'phone view-' + booking.screen}><StatusBar booking={booking}/><Screen booking={booking}/>
-    {showIntroduction && <Dialog title="+2 Seat Reservation" label="Designer's note" onClose={() => setShowIntroduction(false)}>
+    {showIntroduction && <Dialog title="Reserve extra seats." label="Designer's note" onClose={() => setShowIntroduction(false)}>
       <p>The feature allows users to book confirmed seats while temporarily reserving nearby seats for friends who haven't decided yet.</p>
       <h3 className="designer-note-heading">Why these limits?</h3>
       <ul className="designer-note-limits">
