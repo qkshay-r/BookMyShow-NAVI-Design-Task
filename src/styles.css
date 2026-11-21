@@ -97,23 +97,23 @@ dialog::backdrop { background:#17192270 }
 .quantities button,.segments button { transition:background-color 180ms ease, color 180ms ease, transform 180ms ease }
 .quantities button:active,.segments button:active { transform:scale(.92) }
 .sheet-rule { margin:15px 0; border-top:1px solid var(--line) }
-.reserve-options { background:var(--blush); border-radius:9px; text-align:left; padding:10px 11px; transition:background-color 200ms ease }
-.reserve-options[data-disabled="true"] { background:#f1f2f4; color:var(--muted); cursor:default }
-.reserve-options[data-disabled="true"] .icon-tile,
-.reserve-options[data-disabled="true"] .quantity-summary { background:#e6e8eb; color:inherit }
-.reserve-options[data-disabled="true"] .quantity-summary svg { color:inherit }
-.reserve-heading { display:flex; align-items:center; gap:5px }
-.reserve-heading .icon-tile { margin-right:5px }
-.reserve-heading h3 { margin:0; font-size:14px; font-weight:700 }
+.reserve-options { background:white; border:1px solid #f2b9c4; border-radius:10px; text-align:left; padding:12px 14px 0; transition:border-color 180ms ease }
+.reserve-options[data-disabled="true"] { background:#fafafa; border-color:var(--line); color:var(--muted) }
+.reserve-heading { display:flex; align-items:center; gap:7px }
+.reserve-heading > svg { color:var(--brand-dark) }
+.reserve-options[data-disabled="true"] .reserve-heading > svg { color:inherit }
+.reserve-heading h3 { margin:0; font-size:15px; font-weight:600 }
 .info-icon { color:#63656b; width:19px; height:28px }
-.reservation-guidance { margin:0 0 0 44px; color:var(--muted); font-size:12px; line-height:1.45 }
+.reservation-guidance { margin:3px 0 0; color:var(--muted); font-size:12px; line-height:1.45 }
 @media (max-width:350px) { .reservation-guidance { min-height:2lh } }
 .segments { width:46%; min-width:156px; display:flex; border:1px solid #dedde0; margin:14px auto 2px; border-radius:22px; overflow:hidden; background:white }
 .segments button { flex:1; min-height:29px; font-weight:600 }
 .segments button:disabled[aria-pressed=true] { background:#d8dadd; color:#62666b }
 .segments button + button { border-left:1px solid #eee }
-.quantity-summary { width:fit-content; max-width:100%; display:flex; align-items:center; gap:7px; margin:8px auto 0; font-size:13px; background:#f9e0e8; padding:5px 12px; border-radius:20px }
-.quantity-summary svg { color:var(--brand) }
+.quantity-summary { display:grid; grid-template-columns:1fr 1fr; align-items:center; border-top:1px solid var(--line); margin-top:13px; padding:11px 0; font-size:14px; font-weight:500 }
+.quantity-summary span { display:flex; align-items:center; justify-content:center; gap:6px }
+.quantity-summary span + span { border-left:1px solid var(--line) }
+.quantity-summary strong { font-size:22px; line-height:1; font-weight:700; font-variant-numeric:tabular-nums }
 .categories { display:flex; justify-content:center; gap:46px; text-align:left; border-top:1px solid var(--line); margin:19px 0 17px; padding-top:12px }
 .categories div { display:grid; gap:2px }
 .categories small { font-size:12px }
