@@ -1,4 +1,4 @@
-import { aisleBefore, available, besideBookedSeat, rowSeats, SHOW } from '../demo'
+import { aisleBefore, available, nearestBookedSeat, rowSeats, reservationsConnected, SHOW } from '../demo'
 
 export const MIN_RESERVATION_TICKETS = 4
 
@@ -34,9 +34,6 @@ export function reconcile(s: Booking, now: number): Booking {
   if (typeof s.hasAutofilled !== 'boolean') {
     s = { ...s, hasAutofilled: s.selected.length > 0 || s.reservedSelection.length > 0 || Boolean(s.receipt) }
   }
-  if (!s.receipt && s.reservedSelection.some(id => !besideBookedSeat(id, s.selected))) {
-    s = { ...s, reservedSelection: s.reservedSelection.filter(id => besideBookedSeat(id, s.selected)), screen: s.screen === 'quantity' ? 'quantity' : 'map', purchase: 'selecting' }
-  }
   if (!s.receipt && s.quantity < MIN_RESERVATION_TICKETS && s.extras > 0) {
     return { ...s, extras: 0, selected: s.selected.slice(0, s.quantity), reservedSelection: [] }
   }
@@ -48,7 +45,7 @@ function pickSeats(s: Booking, seat: string): Booking {
   if (s.screen !== 'map' || !available.has(seat)) return s
   if (s.selected.includes(seat)) {
     const selected = s.selected.filter(id => id !== seat)
-    return { ...s, selected, reservedSelection: s.reservedSelection.filter(id => besideBookedSeat(id, selected)) }
+    return { ...s, selected }
   }
   if (s.reservedSelection.includes(seat)) return { ...s, reservedSelection: s.reservedSelection.filter(id => id !== seat) }
   const selected = [...s.selected]
@@ -61,14 +58,10 @@ function pickSeats(s: Booking, seat: string): Booking {
     if (!available.has(id) || (i > start && aisleBefore(row, i))) break
     if (selected.includes(id) || reservedSelection.includes(id)) continue
     if (selected.length < s.quantity) selected.push(id)
-    else if (reservedSelection.length < s.extras && besideBookedSeat(id, selected)) reservedSelection.push(id)
+    else if (reservedSelection.length < s.extras && nearestBookedSeat(id, selected, reservedSelection)) reservedSelection.push(id)
     else break
     if (s.hasAutofilled) break
   }
-  // The seat before the run can hold the second extra when the right edge is occupied.
-  const before = seats[start - 1]
-  if (!s.hasAutofilled && selected.length === s.quantity && reservedSelection.length < s.extras
-    && available.has(before) && besideBookedSeat(before, selected)) reservedSelection.push(before)
   return { ...s, selected, reservedSelection, hasAutofilled: true }
 }
 export function transition(previous: Booking, action: Action, now: number): Booking {
@@ -95,11 +88,11 @@ export function transition(previous: Booking, action: Action, now: number): Book
       if (action.value < min || action.value > (min ? 10 : 2)) return s
       const next = reconcile({ ...s, [action.type]: action.value }, now)
       const selected = chosen.slice(0, next.quantity)
-      return { ...next, selected, reservedSelection: s.reservedSelection.filter(id => besideBookedSeat(id, selected)).slice(0, next.extras) }
+      return { ...next, selected, reservedSelection: s.reservedSelection.slice(0, next.extras) }
     }
     case 'map': return s.screen === 'quantity' ? { ...s, screen: 'map' } : s
     case 'select': return pickSeats(s, action.seat)
-    case 'review': return s.screen === 'map' && chosen.length === s.quantity && s.reservedSelection.length === s.extras
+    case 'review': return s.screen === 'map' && chosen.length === s.quantity && s.reservedSelection.length === s.extras && reservationsConnected(chosen, s.reservedSelection)
       ? { ...s, screen: 'review', purchase: 'reviewing' } : s
     case 'together':
     case 'remove': {
@@ -114,7 +107,7 @@ export function transition(previous: Booking, action: Action, now: number): Book
       const selected = chosen.filter(id => !seats.includes(id))
       return { ...s, selected, quantity: selected.length, extras: seats.length, reservedSelection: seats, reviewChange: undefined }
     }
-    case 'checkout': return s.screen === 'review' ? { ...s, screen: 'payment', purchase: 'payment_pending' } : s
+    case 'checkout': return s.screen === 'review' && reservationsConnected(chosen, s.reservedSelection) ? { ...s, screen: 'payment', purchase: 'payment_pending' } : s
     case 'additional': {
       if (s.screen !== 'ticket' || unpaid.status !== 'active') return s
       const seats = [...new Set(action.seats ?? unpaid.seats)]
