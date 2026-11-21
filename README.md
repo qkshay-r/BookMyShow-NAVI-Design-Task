@@ -16,10 +16,10 @@ Open the local URL printed by Vite. The interface fills a phone viewport and sta
 ## Follow the 4 + 2 journey
 
 1. Leave the quantity at four. Under **Reserve extra seats**, choose **2**, then select **Select Seats**.
-2. Tap **E6**. Seats **E6 through E9** fill green, followed by **E10 and E11** in yellow. Autofill runs only on the first seat tap and stops at a sold seat, aisle, or row end. Every subsequent tap selects or removes one seat. Available seats fill missing green places first, then yellow places.
-3. Tap **Pay ₹1,080** to review the ticket subtotal and ₹184.08 demo fee. **Continue** opens the ₹1,264.08 payment simulation. **Pay together** includes all six tickets for ₹1,896.12. The bin removes the extras.
+2. Tap **E6**. Seats **E6 through E9** fill green, followed by **E10 and E5** in yellow. Autofill runs only on the first seat tap and stops at a sold seat, aisle, or row end. Every subsequent tap selects or removes one seat. Available seats fill missing green places first, then yellow places.
+3. Tap **Pay ₹1,080** to review the ticket subtotal and ₹184.08 demo fee. **Continue** opens the ₹1,264.08 payment simulation. **Pay now** adds the extras to this payment for a total of ₹1,896.12. **Delete** drops them from the reservation. Confirm either action, then use **Undo** in the card to restore the reservation.
 4. Complete the simulation. **Your Ticket** shows the paid receipt and a separate unpaid reservation. Press **R** or reload the page to start a fresh booking.
-5. Choose **Pay for 2 reserved seats** and complete the ₹632.04 payment. A second receipt confirms E10 and E11. The first receipt keeps its original seats and total.
+5. Choose **Pay for 2 reserved seats** and complete the ₹632.04 payment. A second receipt confirms E10 and E5. The first receipt keeps its original seats and total.
 
 The small code icon beside the phone's bottom navigation bar opens **Demo controls**. The 4 + 2 preset starts on the map with all six seats selected. Timer shortcuts become available after a reservation starts. Reset, the **R** shortcut, and page reloads start a new booking on this browser origin.
 

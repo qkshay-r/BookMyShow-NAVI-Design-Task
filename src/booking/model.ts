@@ -1,4 +1,4 @@
-import { aisleBefore, available, rowSeats, SHOW } from '../demo'
+import { aisleBefore, available, besideBookedSeat, rowSeats, SHOW } from '../demo'
 
 export const MIN_RESERVATION_TICKETS = 4
 
@@ -9,6 +9,7 @@ export interface Receipt { seats: string[]; id: string }
 export interface Booking {
   version: 1; screen: Screen; quantity: number; extras: number; selected: string[]; reservedSelection: string[]
   hasAutofilled: boolean
+  reviewChange?: { type: 'together' | 'remove'; seats: string[] }
   purchase: Purchase; receipt: Receipt | null; additionalReceipts: Receipt[]
   reservation: { status: Hold; seats: string[]; expiresAt: number | null }
   additional: 'idle' | 'pending' | 'failed'; payingSeats: string[]
@@ -20,7 +21,7 @@ export const fresh = (): Booking => ({
 })
 export type Action =
   | { type: 'reset' | 'preset' | 'map' | 'review' | 'back' | 'together' | 'remove' | 'checkout'
-    | 'success' | 'failed' | 'tick' | 'shorten' | 'expire' | 'release' | 'success_without_hold' }
+    | 'undo' | 'success' | 'failed' | 'tick' | 'shorten' | 'expire' | 'release' | 'success_without_hold' }
   | { type: 'quantity' | 'extras'; value: number }
   | { type: 'select'; seat: string }
   | { type: 'additional'; seats?: string[] }
@@ -33,6 +34,9 @@ export function reconcile(s: Booking, now: number): Booking {
   if (typeof s.hasAutofilled !== 'boolean') {
     s = { ...s, hasAutofilled: s.selected.length > 0 || s.reservedSelection.length > 0 || Boolean(s.receipt) }
   }
+  if (!s.receipt && s.reservedSelection.some(id => !besideBookedSeat(id, s.selected))) {
+    s = { ...s, reservedSelection: s.reservedSelection.filter(id => besideBookedSeat(id, s.selected)), screen: s.screen === 'quantity' ? 'quantity' : 'map', purchase: 'selecting' }
+  }
   if (!s.receipt && s.quantity < MIN_RESERVATION_TICKETS && s.extras > 0) {
     return { ...s, extras: 0, selected: s.selected.slice(0, s.quantity), reservedSelection: [] }
   }
@@ -42,7 +46,10 @@ export function reconcile(s: Booking, now: number): Booking {
 }
 function pickSeats(s: Booking, seat: string): Booking {
   if (s.screen !== 'map' || !available.has(seat)) return s
-  if (s.selected.includes(seat)) return { ...s, selected: s.selected.filter(id => id !== seat) }
+  if (s.selected.includes(seat)) {
+    const selected = s.selected.filter(id => id !== seat)
+    return { ...s, selected, reservedSelection: s.reservedSelection.filter(id => besideBookedSeat(id, selected)) }
+  }
   if (s.reservedSelection.includes(seat)) return { ...s, reservedSelection: s.reservedSelection.filter(id => id !== seat) }
   const selected = [...s.selected]
   const reservedSelection = [...s.reservedSelection]
@@ -54,10 +61,14 @@ function pickSeats(s: Booking, seat: string): Booking {
     if (!available.has(id) || (i > start && aisleBefore(row, i))) break
     if (selected.includes(id) || reservedSelection.includes(id)) continue
     if (selected.length < s.quantity) selected.push(id)
-    else if (reservedSelection.length < s.extras) reservedSelection.push(id)
+    else if (reservedSelection.length < s.extras && besideBookedSeat(id, selected)) reservedSelection.push(id)
     else break
     if (s.hasAutofilled) break
   }
+  // The seat before the run can hold the second extra when the right edge is occupied.
+  const before = seats[start - 1]
+  if (!s.hasAutofilled && selected.length === s.quantity && reservedSelection.length < s.extras
+    && available.has(before) && besideBookedSeat(before, selected)) reservedSelection.push(before)
   return { ...s, selected, reservedSelection, hasAutofilled: true }
 }
 export function transition(previous: Booking, action: Action, now: number): Booking {
@@ -72,7 +83,7 @@ export function transition(previous: Booking, action: Action, now: number): Book
       if (s.screen === 'map') return { ...s, screen: 'quantity', quantity: Math.min(10, s.quantity),
         extras: s.extras + Math.max(0, s.quantity - 10), selected: chosen.slice(0, 10),
         reservedSelection: [...chosen.slice(10), ...s.reservedSelection] }
-      if (s.screen === 'review') return { ...s, screen: 'map', purchase: 'selecting' }
+      if (s.screen === 'review') return { ...s, screen: 'map', purchase: 'selecting', reviewChange: undefined }
       if (s.screen === 'payment') return s.receipt ? { ...s, screen: 'ticket', additional: 'idle', payingSeats: [] }
         : { ...s, screen: 'review', purchase: 'reviewing' }
       return s
@@ -83,15 +94,26 @@ export function transition(previous: Booking, action: Action, now: number): Book
       const min = action.type === 'quantity' ? 1 : 0
       if (action.value < min || action.value > (min ? 10 : 2)) return s
       const next = reconcile({ ...s, [action.type]: action.value }, now)
-      return { ...next, selected: chosen.slice(0, next.quantity), reservedSelection: s.reservedSelection.slice(0, next.extras) }
+      const selected = chosen.slice(0, next.quantity)
+      return { ...next, selected, reservedSelection: s.reservedSelection.filter(id => besideBookedSeat(id, selected)).slice(0, next.extras) }
     }
     case 'map': return s.screen === 'quantity' ? { ...s, screen: 'map' } : s
     case 'select': return pickSeats(s, action.seat)
     case 'review': return s.screen === 'map' && chosen.length === s.quantity && s.reservedSelection.length === s.extras
       ? { ...s, screen: 'review', purchase: 'reviewing' } : s
-    case 'together': return s.screen === 'review' ? { ...s, quantity: chosen.length + s.reservedSelection.length,
-      selected: [...chosen, ...s.reservedSelection], reservedSelection: [], extras: 0 } : s
-    case 'remove': return s.screen === 'review' ? { ...s, reservedSelection: [], extras: 0 } : s
+    case 'together':
+    case 'remove': {
+      if (s.screen !== 'review' || !s.reservedSelection.length) return s
+      const selected = action.type === 'together' ? [...chosen, ...s.reservedSelection] : chosen
+      return { ...s, selected, quantity: selected.length, extras: 0, reservedSelection: [],
+        reviewChange: { type: action.type, seats: s.reservedSelection } }
+    }
+    case 'undo': {
+      if (s.screen !== 'review' || !s.reviewChange) return s
+      const seats = s.reviewChange.seats
+      const selected = chosen.filter(id => !seats.includes(id))
+      return { ...s, selected, quantity: selected.length, extras: seats.length, reservedSelection: seats, reviewChange: undefined }
+    }
     case 'checkout': return s.screen === 'review' ? { ...s, screen: 'payment', purchase: 'payment_pending' } : s
     case 'additional': {
       if (s.screen !== 'ticket' || unpaid.status !== 'active') return s

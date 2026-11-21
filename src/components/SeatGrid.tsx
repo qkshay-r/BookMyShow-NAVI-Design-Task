@@ -1,7 +1,7 @@
 import { useLayoutEffect, useRef } from 'react'
 import type { Booking } from '../booking/model'
 import { send } from '../booking/useBooking'
-import { aisleBefore, ROWS, rowSeats, sold, SHOW } from '../demo'
+import { aisleBefore, besideBookedSeat, ROWS, rowSeats, sold, SHOW } from '../demo'
 
 export function SeatGrid({booking: b}: {booking: Booking}) {
   const grid = useRef<HTMLDivElement>(null)
@@ -31,7 +31,8 @@ export function SeatGrid({booking: b}: {booking: Booking}) {
           const selected = b.selected.includes(seat)
           const reserved = b.reservedSelection.includes(seat)
           const state = sold(seat) ? 'sold' : selected ? 'selected' : reserved ? 'reserved' : 'available'
-          return <button type="button" key={seat} data-seat={seat} disabled={state === 'sold'} aria-label={seat + ', ' + state}
+          const ineligible = state === 'available' && b.selected.length === b.quantity && b.reservedSelection.length < b.extras && !besideBookedSeat(seat, b.selected)
+          return <button type="button" key={seat} data-seat={seat} disabled={state === 'sold' || ineligible} aria-label={seat + ', ' + (ineligible ? 'not adjacent' : state)}
             aria-pressed={selected || reserved} className={'seat ' + state + (aisleBefore(row, index) ? ' aisle' : '')}
             onClick={() => send({ type: 'select', seat })}>{index + 1}</button>
         })}</div></div>)}</section>)}</div></div>

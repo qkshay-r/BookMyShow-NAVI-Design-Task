@@ -21,7 +21,7 @@ export function SeatMap({booking: b}: {booking: Booking}) {
     <SeatGrid booking={b}/><div className="screen-end"><div className="cinema-screen"><i/></div><p>All eyes this way please!</p></div>
     {b.extras > 0 && <div className="hold-note"><span className="icon-tile"><Clock3/></span><div><b>Reserved seats are kept for 10 minutes</b><p>You can purchase the {b.extras} reserved {plural(b.extras,'seat')} after booking.</p></div></div>}
     </main><SeatLegend/><div className="offer"><b className="bank-check">✔</b><span>YES Private Debit Card Offer</span><small>1/3<i>━ ▬ ▬</i></small></div>
-    <Footer><div className="selection-hint" aria-live="polite">{left > 0 ? nowLeft > 0 ? 'Select ' + nowLeft + ' ' + plural(nowLeft,'seat') + ' to book now' : 'Select ' + left + ' extra ' + plural(left,'seat') + ' to reserve' : b.selected.join(', ') + (b.extras ? ' · ' + b.extras + ' to reserve' : '')}</div>
+    <Footer><div className="selection-hint" aria-live="polite">{left > 0 ? nowLeft > 0 ? 'Select ' + nowLeft + ' ' + plural(nowLeft,'seat') + ' to book now' : 'Select ' + left + ' ' + plural(left,'seat') + ' beside a green seat' : b.selected.join(', ') + (b.extras ? ' · ' + b.extras + ' to reserve' : '')}</div>
     <Button disabled={left > 0} onClick={() => send({ type: 'review' })}>Pay {money(b.quantity * SHOW.ticketPaise,0)}</Button></Footer>
-    {info && <Dialog title="Group booking" onClose={() => setInfo(false)}><p>Your first seat tap fills the row to the right, green seats first and then yellow seats for later. Each later tap selects or removes one seat. Your 10-minute hold begins once the first payment succeeds.</p></Dialog>}</>
+    {info && <Dialog title="Group booking" onClose={() => setInfo(false)}><p>Each yellow seat must sit directly to the left or right of a green seat in the same row, on the same side of the aisle. Removing its last green neighbour also clears the yellow seat.</p></Dialog>}</>
 }

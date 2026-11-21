@@ -54,5 +54,5 @@ export function ReservationCard({booking: b}: {booking: Booking}) {
     <p>Complete payment before your reservation expires.</p><Countdown expiresAt={r.expiresAt!}/>
     <div className="reserved-price"><span>Total for {n} {plural(n,'seat')}</span><b>{money(total(n))}</b></div>
     <Button onClick={() => send({type:'additional'})}>Pay for {n} reserved {plural(n,'seat')}<ChevronRight size={18}/></Button>
-    <Button secondary disabled><Share2 size={16}/>Share Booking Details</Button></section>
+    <Button secondary type="button"><Share2 size={16}/>Share Booking Details</Button></section>
 }
