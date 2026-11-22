@@ -15,12 +15,12 @@ export interface Booking {
   additional: 'idle' | 'pending' | 'failed'; payingSeats: string[]
 }
 export const fresh = (): Booking => ({
-  version: 1, screen: 'quantity', quantity: 4, extras: 0, selected: [], reservedSelection: [], hasAutofilled: false,
+  version: 1, screen: 'quantity', quantity: 1, extras: 0, selected: [], reservedSelection: [], hasAutofilled: false,
   purchase: 'selecting', receipt: null, additionalReceipts: [],
   reservation: { status: 'none', seats: [], expiresAt: null }, additional: 'idle', payingSeats: [],
 })
 export type Action =
-  | { type: 'reset' | 'preset' | 'map' | 'review' | 'back' | 'together' | 'remove' | 'checkout'
+  | { type: 'reset' | 'reset_group' | 'preset' | 'map' | 'review' | 'back' | 'together' | 'remove' | 'checkout'
     | 'undo' | 'success' | 'failed' | 'tick' | 'shorten' | 'expire' | 'release' | 'success_without_hold' }
   | { type: 'quantity' | 'extras'; value: number }
   | { type: 'select'; seat: string }
@@ -70,6 +70,7 @@ export function transition(previous: Booking, action: Action, now: number): Book
   const unpaid = s.reservation
   switch (action.type) {
     case 'reset': return fresh()
+    case 'reset_group': return { ...fresh(), quantity: 4, extras: 2 }
     case 'preset': return { ...fresh(), screen: 'map', quantity: SHOW.initialSeats.length, extras: 2, selected: SHOW.initialSeats, reservedSelection: SHOW.extraSeats, hasAutofilled: true }
     case 'tick': return s
     case 'back':

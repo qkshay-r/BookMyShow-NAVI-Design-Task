@@ -46,8 +46,8 @@ export function Ticket({booking: b}: {booking: Booking}) {
   return <><header className="ticket-header"><h1>Your Ticket</h1><button type="button" className="icon" aria-label="Share ticket"><Share2 size={15}/></button>
     <button className="close-ticket" aria-label="Close ticket" onClick={() => setShowClose(true)}><X size={17}/></button></header>
     <main className="scroll ticket-stack">{receipts.map((r,i) => <ConfirmedTicket key={r.id} receipt={r} additional={i>0}/>)}<ReservationCard booking={b} chooseOne={() => setChoosing(true)}/></main><div className="ticket-home"><div className="home-line"/></div>
-    {showClose && <Dialog title="Your ticket is saved" onClose={() => setShowClose(false)}><p>You can close this tab and return to your booking on this device. Starting a new demo booking clears this one.</p>
-      <Button onClick={() => { setShowClose(false); send({type:'reset'}) }}>Start new demo booking</Button>
+    {showClose && <Dialog title="Your ticket is saved" onClose={() => setShowClose(false)}><p>You can close this tab and return to your booking on this device. Resetting the prototype clears this booking and returns to the number of seats with 4 to book and 2 to reserve.</p>
+      <Button onClick={() => { setShowClose(false); send({type:'reset_group'}) }}>Reset prototype (4+2)</Button>
       <Button secondary disabled={b.reservation.status !== 'active'} onClick={() => { setShowClose(false); send({type:'expire'}) }}>Simulate expiry</Button>
       <Button secondary onClick={() => { setShowClose(false); setShowDemo(true) }}>Demo controls</Button>
     </Dialog>}
